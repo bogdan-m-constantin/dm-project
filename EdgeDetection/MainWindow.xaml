@@ -8,30 +8,30 @@
         
         Title="MainWindow" Width="1920" Height="1080">
     <Grid Background="#FFEDEDED">
-        <TextBlock HorizontalAlignment="Center" Margin="0,58,0,0" TextWrapping="Wrap" Text="Input Image" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="409,33,0,0" TextWrapping="Wrap" Text="Input Image" VerticalAlignment="Top"/>
 
-        <Image x:Name="InputImage" HorizontalAlignment="Center" Height="200" Margin="0,87,0,0" VerticalAlignment="Top"
+        <Image x:Name="InputImage" HorizontalAlignment="Left" Height="400" Margin="31,66,0,0" VerticalAlignment="Top"
                Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
-               Width="300"/>
+               Width="400"/>
         <TextBlock HorizontalAlignment="Left" Margin="151,284,0,0" TextWrapping="Wrap" Text="Sobel" VerticalAlignment="Top"/>
-        <Image x:Name="Sobel" HorizontalAlignment="Left" Height="386" Margin="31,314,0,0" VerticalAlignment="Top"
+        <Image x:Name="Sobel" HorizontalAlignment="Left" Height="400" Margin="478,64,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
-            Width="574"/>
+            Width="400"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="959,292,0,0" TextWrapping="Wrap" Text="Prewit" VerticalAlignment="Top"/>
-        <Image x:Name="Prewitt" HorizontalAlignment="Left" Height="377" Margin="660,314,0,0" VerticalAlignment="Top"
+        <Image x:Name="Prewitt" HorizontalAlignment="Left" Height="400" Margin="947,64,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
-            Width="566"/>
+            Width="400"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="1580,286,0,0" TextWrapping="Wrap" Text="Laplacian" VerticalAlignment="Top"/>
-        <Image x:Name="Laplacian" HorizontalAlignment="Left" Height="388" Margin="1289,314,0,0" VerticalAlignment="Top"
+        <Image x:Name="Laplacian" HorizontalAlignment="Left" Height="400" Margin="1399,66,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
-            Width="590"/>
+            Width="404"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="1208,708,0,0" TextWrapping="Wrap" Text="Canny" VerticalAlignment="Top"/>
-        <Image x:Name="Canny" HorizontalAlignment="Left" Height="200" Margin="1075,733,0,0" VerticalAlignment="Top"
+        <Image x:Name="Canny" HorizontalAlignment="Left" Height="400" Margin="31,503,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
-            Width="300"/>
+            Width="400"/>
         <TextBox x:Name="ImagePath" HorizontalAlignment="Left" Height="18" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="687"/>
         <Button x:Name="LoadImage" Content="Load Image" HorizontalAlignment="Left" Margin="711,9,0,0" VerticalAlignment="Top" Height="19" Width="79"/>
 
