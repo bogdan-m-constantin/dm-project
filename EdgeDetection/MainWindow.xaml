@@ -8,32 +8,47 @@
         
         Title="MainWindow" Width="1920" Height="1080">
     <Grid Background="#FFEDEDED">
-        <TextBlock HorizontalAlignment="Left" Margin="409,33,0,0" TextWrapping="Wrap" Text="Input Image" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="31,479,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" TextAlignment="Center" FontSize="24" Height="30"><Run Text="Canny"/><LineBreak/><Run/></TextBlock>
 
-        <Image x:Name="InputImage" HorizontalAlignment="Left" Height="400" Margin="31,66,0,0" VerticalAlignment="Top"
+        <Image x:Name="InputImage" HorizontalAlignment="Left" Height="400" Margin="31,64,0,0" VerticalAlignment="Top"
                Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
                Width="400"/>
-        <TextBlock HorizontalAlignment="Left" Margin="151,284,0,0" TextWrapping="Wrap" Text="Sobel" VerticalAlignment="Top"/>
         <Image x:Name="Sobel" HorizontalAlignment="Left" Height="400" Margin="478,64,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
             Width="400"/>
 
-        <TextBlock HorizontalAlignment="Left" Margin="959,292,0,0" TextWrapping="Wrap" Text="Prewit" VerticalAlignment="Top"/>
         <Image x:Name="Prewitt" HorizontalAlignment="Left" Height="400" Margin="947,64,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
             Width="400"/>
 
         <TextBlock HorizontalAlignment="Left" Margin="1580,286,0,0" TextWrapping="Wrap" Text="Laplacian" VerticalAlignment="Top"/>
-        <Image x:Name="Laplacian" HorizontalAlignment="Left" Height="400" Margin="1399,66,0,0" VerticalAlignment="Top"
+        <Image x:Name="Laplacian" HorizontalAlignment="Left" Height="400" Margin="1399,64,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
             Width="404"/>
-
-        <TextBlock HorizontalAlignment="Left" Margin="1208,708,0,0" TextWrapping="Wrap" Text="Canny" VerticalAlignment="Top"/>
-        <Image x:Name="Canny" HorizontalAlignment="Left" Height="400" Margin="31,503,0,0" VerticalAlignment="Top"
+        <Image x:Name="CannyBlurred" HorizontalAlignment="Left" Height="300" Margin="31,559,0,0" VerticalAlignment="Top"
             Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
-            Width="400"/>
-        <TextBox x:Name="ImagePath" HorizontalAlignment="Left" Height="18" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="687"/>
-        <Button x:Name="LoadImage" Content="Load Image" HorizontalAlignment="Left" Margin="711,9,0,0" VerticalAlignment="Top" Height="19" Width="79"/>
+            Width="300"/>
+        <Button x:Name="LoadImage" Content="Load Image" HorizontalAlignment="Left" Margin="31,10,0,0" VerticalAlignment="Top" Height="19" Width="100"/>
+        <TextBlock HorizontalAlignment="Left" Margin="478,27,0,0" TextWrapping="Wrap" Text="Sobel" VerticalAlignment="Top" Width="400" TextAlignment="Center" FontSize="24"/>
+        <TextBlock HorizontalAlignment="Left" Margin="947,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" TextAlignment="Center" FontSize="24" Height="34"><Run Text="Prewitt"/><LineBreak/><Run/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="1399,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="400" TextAlignment="Center" FontSize="24" Height="34" Text="Laplacian"/>
+        <TextBlock HorizontalAlignment="Left" Margin="31,511,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" TextAlignment="Center" FontSize="24" Height="30"><Run Text="Blured"/><LineBreak/><Run/></TextBlock>
+        <Image x:Name="CannySobbel" HorizontalAlignment="Left" Height="300" Margin="378,559,0,0" VerticalAlignment="Top"
+            Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
+            Width="300"/>
+        <TextBlock HorizontalAlignment="Left" Margin="378,511,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" TextAlignment="Center" FontSize="24" Height="30"><Run Text="Sobel Filter"/><LineBreak/><Run/></TextBlock>
+        <Image x:Name="CannyNonMax" HorizontalAlignment="Left" Height="300" Margin="710,559,0,0" VerticalAlignment="Top"
+            Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
+            Width="300"/>
+        <TextBlock HorizontalAlignment="Left" Margin="710,506,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" TextAlignment="Center" FontSize="24" Height="30" Text="Non-Max Supression"/>
+        <Image x:Name="CannyTresholding" HorizontalAlignment="Left" Height="300" Margin="1064,559,0,0" VerticalAlignment="Top"
+            Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
+            Width="300"/>
+        <TextBlock HorizontalAlignment="Left" Margin="1064,511,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" TextAlignment="Center" FontSize="24" Height="30"><Run Text="Double Tresholding"/><LineBreak/><Run/></TextBlock>
+        <Image x:Name="CannyEdgeTracking" HorizontalAlignment="Left" Height="300" Margin="1399,559,0,0" VerticalAlignment="Top"
+            Source="https://randomwordgenerator.com/img/picture-generator/g33815e6df811c258a606a9a313eb798de88de92031fc196fe0bb1d4bd4fa6be7c59d43cfbfedd1268b185db543d21ba8_640.jpg"
+            Width="300"/>
+        <TextBlock HorizontalAlignment="Left" Margin="1399,511,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="300" TextAlignment="Center" FontSize="24" Height="30" Text="Edge Tracking"/>
 
     </Grid>
 </Window>

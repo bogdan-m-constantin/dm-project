@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,7 +19,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using static System.Net.Mime.MediaTypeNames;
+using Application = System.Windows.Application;
 
 namespace EdgeDetection
 {
@@ -36,37 +39,52 @@ namespace EdgeDetection
 
         }
 
-        private void LoadImage_Click(object sender, RoutedEventArgs e)
+        private async void LoadImage_Click(object sender, RoutedEventArgs e)
         {
-            string path = ImagePath.Text;
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".*";
+            dlg.Filter = "All Files|*.*|JPEG Files (*.jpeg)|*.jpeg|PNG Files (*.png)|*.png|JPG Files (*.jpg)|*.jpg|GIF Files (*.gif)|*.gif|WEBP Files (*.webp)|*.webp";
+            bool? result = dlg.ShowDialog();
+            // Get the selected file name and display in a TextBox 
+            if (!result.HasValue || !result.Value)
+                return;
+            var path = dlg.FileName;
             if (File.Exists(path))
             {
-                var bitmap = new BitmapImage(new Uri(path, UriKind.Absolute));
+                    var bitmap = new BitmapImage(new Uri(path, UriKind.Absolute));
+
+                    var matrix = ImageToMatrix(bitmap);
+                    var sobel = MatrixToImage(ProcessBitmapAsSobel(matrix, bitmap.PixelWidth, bitmap.PixelHeight).bitmap, bitmap);
+                    var prewit = MatrixToImage(ProcessBitmapAsPrewitt(matrix, bitmap.PixelWidth, bitmap.PixelHeight), bitmap);
+                    var laplacian = MatrixToImage(ProcessBitmapAsLaplacian(matrix, bitmap.PixelWidth, bitmap.PixelHeight), bitmap);
+                    var canny = MatrixToImage(ProcessBitmapAsCanny(matrix, bitmap.PixelWidth, bitmap.PixelHeight,bitmap), bitmap);
+
                 InputImage.Source = bitmap;
-                var matrix = ImageToMatrix(bitmap);
-                Sobel.Source = MatrixToImage(ProcessBitmapAsSobel(matrix, bitmap.PixelWidth, bitmap.PixelHeight).bitmap, bitmap);
-                Prewitt.Source = MatrixToImage(ProcessBitmapAsPrewitt(matrix, bitmap.PixelWidth, bitmap.PixelHeight), bitmap);
-                Laplacian.Source = MatrixToImage(ProcessBitmapAsLaplacian(matrix, bitmap.PixelWidth, bitmap.PixelHeight), bitmap);
-                Canny.Source = MatrixToImage(ProcessBitmapAsCanny(matrix, bitmap.PixelWidth, bitmap.PixelHeight), bitmap);
+                Sobel.Source = sobel;
+                Prewitt.Source = prewit;
+                Laplacian.Source = laplacian;
+                CannyEdgeTracking.Source = canny;
+
             }
             else
             {
-                ;
                 MessageBoxButton button = MessageBoxButton.OK;
                 MessageBoxImage icon = MessageBoxImage.Error;
-                MessageBoxResult result;
-
-                result = MessageBox.Show("File does not exist", "Error", button, icon, MessageBoxResult.Yes);
+                MessageBoxResult res = MessageBox.Show("File does not exist", "Error", button, icon, MessageBoxResult.Yes);
             }
         }
 
-        private int[,] ProcessBitmapAsCanny(int[,] bitmap, int width, int height)
+        private int[,] ProcessBitmapAsCanny(int[,] bitmap, int width, int height,BitmapImage org)
         {
             var grayscale = Grayscale(bitmap, width, height);
             var blured = Blur(grayscale, width, height);
+            CannyBlurred.Source = MatrixToImage(blured, org);
             var sobeled = ProcessBitmapAsSobel(blured, width, height);
+            CannySobbel.Source = MatrixToImage(sobeled.bitmap, org);
             var suppresed = NonMaxSuppression(sobeled.bitmap, sobeled.theta, width, height);
+            CannyNonMax.Source = MatrixToImage(suppresed, org);
             var thresholded = DoubleTresholding(suppresed, width, height);
+            CannyTresholding.Source = MatrixToImage(thresholded, org);
             var edgeTracked = EdgeTracking(thresholded, width, height);
             return edgeTracked;
         }
@@ -75,15 +93,12 @@ namespace EdgeDetection
         {
             var grayscale = Grayscale(bitmap, width, height);
             var blured = Blur(grayscale, width, height);
-            int[,] kernel = new int[,] {
-            { -1, -1, -1 ,-1,-1},
-            { -1, -1, -1 ,-1,-1},
-            { -1, -1, 8, -1, -1 },
-            { -1, -1, -1 ,-1,-1},
-            { -1, -1, -1 ,-1,-1},
-            };
+            double[,] kernel = new double[,]
+       { { -1, -1, -1, },
+         { -1,  8, -1, },
+         { -1, -1, -1, }, };
 
-            var laplacian = ApplyKernel( blured, width, height,kernel);
+            var laplacian = ConvolutionFilter(blured,kernel,width,height);
             return laplacian;
         }
 
@@ -141,8 +156,8 @@ namespace EdgeDetection
                     max = Math.Max(max, GetChannelByte(suppresed[i, j], 0));
                 }
             }
-            var highThreshold = max * 0.09;
-            var lowThreshold = highThreshold * 0.05;
+            var highThreshold = max * 0.25;
+            var lowThreshold = max * 0.05;
             for (var i = 0; i < height; i++)
             {
                 for (var j = 0; j < width; j++)
@@ -357,10 +372,11 @@ namespace EdgeDetection
 
         public int[,] ApplyKernel(int[,] bitmap, int width, int height, int[,] kernel)
         {
+
             int[,] modified = new int[height, width];
             int kernelSize = (int)Math.Sqrt(kernel.Length);
-            int h = kernelSize  / 2;
-            
+            int h = kernelSize / 2;
+
             for (int i = h; i < height - h; i++)
             {
                 for (int j = h; j < width - h; j++)
@@ -383,6 +399,97 @@ namespace EdgeDetection
             }
             return modified;
 
+        }
+        private static int[,] ConvolutionFilter(int[,] sourceBitmap,
+                                     double[,] filterMatrix,
+                                     int width,int height,
+                                          double factor = 1,
+                                               int bias = 0,
+                                     bool grayscale = false)
+        {
+            int[,] resultImage = new int[height, width];
+
+          
+
+
+           
+
+
+            double blue = 0.0;
+            double green = 0.0;
+            double red = 0.0;
+
+
+            int filterWidth = filterMatrix.GetLength(1);
+
+
+            int filterOffset = (filterWidth - 1) / 2;
+        
+
+
+            for (int offsetY = filterOffset; offsetY <
+                height - filterOffset; offsetY++)
+            {
+                for (int offsetX = filterOffset; offsetX < width- filterOffset; offsetX++)
+                {
+                    blue = 0;
+                    green = 0;
+                    red = 0;
+                    for (int filterY = -filterOffset;
+                        filterY <= filterOffset; filterY++)
+                    {
+                        for (int filterX = -filterOffset;
+                            filterX <= filterOffset; filterX++)
+                        {
+
+                            byte[] bytes = BitConverter.GetBytes(sourceBitmap[offsetY + filterY,  offsetX + filterX]);
+                            blue += bytes[0] *
+                                    filterMatrix[filterY + filterOffset,
+                                                 filterX + filterOffset];
+
+
+                            green += bytes[1] *
+                                     filterMatrix[filterY + filterOffset,
+                                                  filterX + filterOffset];
+
+
+                            red += bytes[2] *
+                                   filterMatrix[filterY + filterOffset,
+                                                filterX + filterOffset];
+                        }
+                    }
+
+
+                    blue = factor * blue + bias;
+                    green = factor * green + bias;
+                    red = factor * red + bias;
+
+
+                    if (blue > 255)
+                    { blue = 255; }
+                    else if (blue < 0)
+                    { blue = 0; }
+
+
+                    if (green > 255)
+                    { green = 255; }
+                    else if (green < 0)
+                    { green = 0; }
+
+
+                    if (red > 255)
+                    { red = 255; }
+                    else if (red < 0)
+                    { red = 0; }
+
+                    resultImage[offsetY, offsetX] = BitConverter.ToInt32(new byte[] { (byte)blue, (byte)green, (byte)red, 0xff });
+                    
+                }
+            }
+
+
+            
+            return resultImage;
         }
 
     }
